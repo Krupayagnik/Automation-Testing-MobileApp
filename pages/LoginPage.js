@@ -1,26 +1,11 @@
-// ============================================================
-// FILE: pages/LoginPage.js
-// PURPOSE: Page Object for the Login screen
-// Contains all selectors and actions for Login functionality
-// ============================================================
-
-// Import BasePage (parent class with shared methods)
 const BasePage = require('./BasePage');
 
 class LoginPage extends BasePage {
 
-  /**
-   * Constructor - setup selectors for Login page elements
-   * Selectors are like "addresses" for UI elements
-   * Update these if the app's HTML structure changes
-   */
   constructor(page) {
-    super(page); // Call parent constructor (required)
+    super(page); // Call parent constructor 
 
-    // ── Locators (selectors for UI elements) ────────────────
-    // These are educated guesses based on common mobile app patterns
-    // You'll need to INSPECT the actual app and update these
-
+    // ── Locators (selectors for UI elements) 
     this.phoneInput        = 'input[type="tel"], input[placeholder*="phone" i], input[placeholder*="mobile" i], input[name="phone"]';
     this.emailInput        = 'input[type="email"], input[placeholder*="email" i], input[name="email"]';
     this.passwordInput     = 'input[type="password"], input[placeholder*="password" i]';
@@ -36,48 +21,40 @@ class LoginPage extends BasePage {
     this.homeIndicator     = '[class*="home"], [class*="dashboard"], [class*="feed"]'; // Element shown after login
   }
 
-  // ─────────────────────────────────────────────────────────
   // NAVIGATION
-  // ─────────────────────────────────────────────────────────
-
+ 
   /**
-   * Open the login page
    * @param {string} baseUrl - The app's base URL
    */
   async openLoginPage(baseUrl) {
     await this.goto(baseUrl);
-    console.log('📱 Opened app home page');
+    console.log(' Opened app home page');
   }
 
-  // ─────────────────────────────────────────────────────────
   // ACTIONS
-  // ─────────────────────────────────────────────────────────
 
   /**
    * Enter phone number in the phone input field
-   * @param {string} phone - Phone number to enter
    */
   async enterPhone(phone) {
     await this.type(this.phoneInput, phone);
-    console.log(`📞 Entered phone: ${phone}`);
+    console.log(` Entered phone: ${phone}`);
   }
 
   /**
    * Enter email address
-   * @param {string} email - Email to enter
    */
   async enterEmail(email) {
     await this.type(this.emailInput, email);
-    console.log(`📧 Entered email: ${email}`);
+    console.log(` Entered email: ${email}`);
   }
 
   /**
    * Enter password
-   * @param {string} password - Password to enter
    */
   async enterPassword(password) {
     await this.type(this.passwordInput, password);
-    console.log('🔒 Entered password');
+    console.log(' Entered password');
   }
 
   /**
@@ -102,7 +79,7 @@ class LoginPage extends BasePage {
    */
   async clickVerifyOtp() {
     await this.click(this.verifyOtpButton);
-    console.log('✅ Clicked Verify OTP');
+    console.log(' Clicked Verify OTP');
   }
 
   /**
@@ -110,7 +87,7 @@ class LoginPage extends BasePage {
    */
   async clickLogin() {
     await this.click(this.loginButton);
-    console.log('🔑 Clicked Login button');
+    console.log(' Clicked Login button');
   }
 
   /**
@@ -132,17 +109,12 @@ class LoginPage extends BasePage {
    */
   async clickLogout() {
     await this.click(this.logoutButton);
-    console.log('👋 Clicked Logout');
+    console.log(' Clicked Logout');
   }
 
-  // ─────────────────────────────────────────────────────────
-  // COMBINED FLOWS (multi-step actions)
-  // ─────────────────────────────────────────────────────────
-
+  // COMBINED FLOWS 
   /**
    * Complete login with phone + OTP flow
-   * @param {string} phone - User's phone number
-   * @param {string} otp   - OTP code received
    */
   async loginWithPhoneOtp(phone, otp) {
     await this.enterPhone(phone);
@@ -150,59 +122,49 @@ class LoginPage extends BasePage {
     await this.wait(2000); // Wait for OTP to send
     await this.enterOtp(otp);
     await this.clickVerifyOtp();
-    console.log('✅ Completed Phone+OTP login flow');
+    console.log(' Completed Phone+OTP login flow');
   }
 
   /**
    * Complete login with email + password flow
-   * @param {string} email    - User's email
-   * @param {string} password - User's password
    */
   async loginWithEmailPassword(email, password) {
     await this.enterEmail(email);
     await this.enterPassword(password);
     await this.clickLogin();
-    console.log('✅ Completed Email+Password login flow');
+    console.log('Completed Email+Password login flow');
   }
 
-  // ─────────────────────────────────────────────────────────
-  // ASSERTIONS (verification methods)
-  // ─────────────────────────────────────────────────────────
+  // ASSERTIONS (verification)
 
   /**
    * Verify that login was successful
-   * Checks for home/dashboard elements
    */
   async assertLoginSuccess() {
-    // After login, URL should change OR home page elements should appear
     await this.wait(2000);
     const currentUrl = this.getCurrentUrl();
-    console.log(`📍 Current URL after login: ${currentUrl}`);
+    console.log(` Current URL after login: ${currentUrl}`);
 
-    // Check if we're no longer on login page
     const isOnLoginPage = currentUrl.includes('login') || currentUrl.includes('signin');
     if (isOnLoginPage) {
-      // Maybe we're on home screen but URL didn't change - check for home elements
       const homeVisible = await this.isVisible(this.homeIndicator);
       if (!homeVisible) {
         throw new Error('❌ Login failed - still on login page or no home indicator found');
       }
     }
-    console.log('✅ Login successful - user is on home/dashboard');
+    console.log(' Login successful - user is on home/dashboard');
   }
 
   /**
    * Verify error message is shown
-   * @param {string} expectedText - Optional: specific error text to check
    */
   async assertErrorShown(expectedText) {
     const errorVisible = await this.isVisible(this.errorMessage);
     if (!errorVisible && expectedText) {
-      // Check for the text directly on page
       await this.assertPageContainsText(expectedText);
     } else if (errorVisible) {
       const errorText = await this.getText(this.errorMessage);
-      console.log(`⚠️  Error shown: "${errorText}"`);
+      console.log(` Error shown: "${errorText}"`);
       if (expectedText) {
         const hasExpected = errorText.toLowerCase().includes(expectedText.toLowerCase());
         if (!hasExpected) {
@@ -210,7 +172,7 @@ class LoginPage extends BasePage {
         }
       }
     }
-    console.log('✅ Error message is displayed as expected');
+    console.log(' Error message is displayed as expected');
   }
 
   /**
@@ -218,7 +180,7 @@ class LoginPage extends BasePage {
    */
   async assertOtpFieldVisible() {
     await this.assertVisible(this.otpInput, 'OTP input field should appear after sending OTP');
-    console.log('✅ OTP input field is visible');
+    console.log(' OTP input field is visible');
   }
 }
 
