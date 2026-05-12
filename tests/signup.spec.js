@@ -1,15 +1,10 @@
-// ============================================================
-// FILE: tests/signup.spec.js
-// PURPOSE: All test cases for Signup / Registration functionality
-// ============================================================
-
 const { test, expect } = require('@playwright/test');
 const SignupPage = require('../pages/SignupPage');
 const LoginPage  = require('../pages/LoginPage');
 const { APP_URL, NEW_USER, INVALID_DATA, TIMEOUTS } = require('../utils/testData');
 const { takeFailureScreenshot, generateUniqueEmail, generateUsername } = require('../utils/helpers');
 
-test.describe('📝 Signup / Registration Feature Tests', () => {
+test.describe('Signup / Registration Feature Tests', () => {
 
   let signupPage;
 
@@ -37,20 +32,18 @@ test.describe('📝 Signup / Registration Feature Tests', () => {
   test.afterEach(async ({ page }, testInfo) => {
     if (testInfo.status !== testInfo.expectedStatus) {
       await takeFailureScreenshot(page, testInfo.title);
-      console.log(`❌ TEST FAILED: ${testInfo.title}`);
+      console.log(` TEST FAILED: ${testInfo.title}`);
     }
   });
 
 
-  // ════════════════════════════════════════════════════════════
-  // ✅ POSITIVE TEST CASES
-  // ════════════════════════════════════════════════════════════
+  //  POSITIVE TEST CASES
 
   test('TC_SIGNUP_001 - Signup page should load with registration form', async ({ page }) => {
-    console.log('\n🧪 TC_SIGNUP_001: Verifying signup page loads');
+    console.log('\n TC_SIGNUP_001: Verifying signup page loads');
 
     const url = page.url();
-    console.log(`📍 Current URL: ${url}`);
+    console.log(` Current URL: ${url}`);
 
     // At least one form input should be visible
     const inputs = [
@@ -66,22 +59,22 @@ test.describe('📝 Signup / Registration Feature Tests', () => {
       const visible = await signupPage.isVisible(selector);
       if (visible) {
         atLeastOneVisible = true;
-        console.log(`✅ Found form field: ${selector}`);
+        console.log(` Found form field: ${selector}`);
         break;
       }
     }
 
     // If no inputs found, at least the page should load
     if (!atLeastOneVisible) {
-      console.log('⚠️  No form inputs found - might be a multi-step form or different URL');
+      console.log(' No form inputs found - might be a multi-step form or different URL');
     }
 
     await signupPage.screenshot('signup-form-visible');
-    console.log('✅ Signup page loaded');
+    console.log(' Signup page loaded');
   });
 
   test('TC_SIGNUP_002 - Entering unique username should show availability check', async ({ page }) => {
-    console.log('\n🧪 TC_SIGNUP_002: Testing username availability check');
+    console.log('\n TC_SIGNUP_002: Testing username availability check');
 
     const usernameVisible = await signupPage.isVisible(signupPage.usernameInput);
     if (!usernameVisible) {
@@ -89,10 +82,8 @@ test.describe('📝 Signup / Registration Feature Tests', () => {
       return;
     }
 
-    const uniqueUsername = generateUsername(); // e.g. user_abc12
+    const uniqueUsername = generateUsername(); 
     await signupPage.enterUsername(uniqueUsername);
-
-    // Wait for real-time availability check
     await signupPage.wait(2000);
     await signupPage.screenshot('username-availability-check');
 
@@ -103,11 +94,11 @@ test.describe('📝 Signup / Registration Feature Tests', () => {
     // At least log what we found
     console.log(`Username "${uniqueUsername}" - Available: ${isAvailable}, Taken: ${isTaken}`);
     // This is informational - username checks depend on backend
-    console.log('✅ Username availability check test completed');
+    console.log('Username availability check test completed');
   });
 
   test('TC_SIGNUP_003 - All required fields filled should enable submit button', async ({ page }) => {
-    console.log('\n🧪 TC_SIGNUP_003: Testing form completion enables submit');
+    console.log('\n TC_SIGNUP_003: Testing form completion enables submit');
 
     // Check if submit button exists
     const hasSubmit = await signupPage.isVisible(signupPage.submitButton);
@@ -132,7 +123,7 @@ test.describe('📝 Signup / Registration Feature Tests', () => {
     await signupPage.completeRegistration(testUser);
     await signupPage.wait(3000);
     await signupPage.screenshot('after-signup-submit');
-    console.log('✅ Registration form submitted with valid data');
+    console.log(' Registration form submitted with valid data');
   });
 
   test('TC_SIGNUP_004 - Login link on signup page should navigate to login', async ({ page }) => {
@@ -149,16 +140,16 @@ test.describe('📝 Signup / Registration Feature Tests', () => {
     await signupPage.wait(2000);
     const urlAfter = page.url();
 
-    console.log(`📍 Navigated: ${urlBefore} → ${urlAfter}`);
+    console.log(` Navigated: ${urlBefore} → ${urlAfter}`);
 
     // Should navigate away from signup page
     const leftSignupPage = !urlAfter.includes('signup') && !urlAfter.includes('register');
     expect(leftSignupPage || urlAfter !== urlBefore).toBe(true);
-    console.log('✅ Login link works correctly');
+    console.log(' Login link works correctly');
   });
 
   test('TC_SIGNUP_005 - OTP verification on phone number should work', async ({ page }) => {
-    console.log('\n🧪 TC_SIGNUP_005: Testing phone OTP during signup');
+    console.log('\n TC_SIGNUP_005: Testing phone OTP during signup');
 
     const phoneVisible = await signupPage.isVisible(signupPage.phoneInput);
     const sendOtpVisible = await signupPage.isVisible(signupPage.sendOtpButton);
@@ -178,16 +169,14 @@ test.describe('📝 Signup / Registration Feature Tests', () => {
     const successMsg = await signupPage.isVisible(signupPage.successMessage);
 
     expect(otpVisible || successMsg).toBe(true);
-    console.log('✅ OTP was triggered on signup phone field');
+    console.log(' OTP was triggered on signup phone field');
   });
 
 
-  // ════════════════════════════════════════════════════════════
-  // ❌ NEGATIVE TEST CASES
-  // ════════════════════════════════════════════════════════════
-
+  // NEGATIVE TEST CASES
+  
   test('TC_SIGNUP_006 - Submitting empty form should show validation errors', async ({ page }) => {
-    console.log('\n🧪 TC_SIGNUP_006: Testing empty form validation');
+    console.log('\n TC_SIGNUP_006: Testing empty form validation');
 
     const hasSubmit = await signupPage.isVisible(signupPage.submitButton);
     const hasNext = await signupPage.isVisible(signupPage.nextButton);
@@ -213,11 +202,11 @@ test.describe('📝 Signup / Registration Feature Tests', () => {
     const stayedOnPage = currentUrl.includes('signup') || currentUrl.includes('register');
 
     expect(errorVisible || stayedOnPage).toBe(true);
-    console.log('✅ Empty form correctly shows validation');
+    console.log('Empty form correctly shows validation');
   });
 
   test('TC_SIGNUP_007 - Invalid email format should show error', async ({ page }) => {
-    console.log('\n🧪 TC_SIGNUP_007: Testing invalid email format');
+    console.log('\n TC_SIGNUP_007: Testing invalid email format');
 
     const emailVisible = await signupPage.isVisible(signupPage.emailInput);
     if (!emailVisible) {
@@ -233,11 +222,11 @@ test.describe('📝 Signup / Registration Feature Tests', () => {
     const errorVisible = await signupPage.isVisible(signupPage.errorMessage);
     const stayedOnPage = page.url().includes('signup') || page.url().includes('register');
     expect(errorVisible || stayedOnPage).toBe(true);
-    console.log('✅ Invalid email format handled correctly');
+    console.log('Invalid email format handled correctly');
   });
 
   test('TC_SIGNUP_008 - Mismatched passwords should show error', async ({ page }) => {
-    console.log('\n🧪 TC_SIGNUP_008: Testing mismatched password validation');
+    console.log('\n TC_SIGNUP_008: Testing mismatched password validation');
 
     const passVisible = await signupPage.isVisible(signupPage.passwordInput);
     const confirmVisible = await signupPage.isVisible(signupPage.confirmPassInput);
@@ -257,11 +246,11 @@ test.describe('📝 Signup / Registration Feature Tests', () => {
     const errorVisible = await signupPage.isVisible(signupPage.errorMessage);
     const stayedOnPage = page.url().includes('signup') || page.url().includes('register');
     expect(errorVisible || stayedOnPage).toBe(true);
-    console.log('✅ Password mismatch correctly detected');
+    console.log(' Password mismatch correctly detected');
   });
 
   test('TC_SIGNUP_009 - Short password should fail validation', async ({ page }) => {
-    console.log('\n🧪 TC_SIGNUP_009: Testing short password rejection');
+    console.log('\n TC_SIGNUP_009: Testing short password rejection');
 
     const passVisible = await signupPage.isVisible(signupPage.passwordInput);
     if (!passVisible) {
@@ -277,11 +266,11 @@ test.describe('📝 Signup / Registration Feature Tests', () => {
     const errorVisible = await signupPage.isVisible(signupPage.errorMessage);
     const stayedOnPage = page.url().includes('signup') || page.url().includes('register');
     expect(errorVisible || stayedOnPage).toBe(true);
-    console.log('✅ Short password correctly rejected');
+    console.log(' Short password correctly rejected');
   });
 
   test('TC_SIGNUP_010 - Username with special characters should show error', async ({ page }) => {
-    console.log('\n🧪 TC_SIGNUP_010: Testing special chars in username');
+    console.log('\n TC_SIGNUP_010: Testing special chars in username');
 
     const usernameVisible = await signupPage.isVisible(signupPage.usernameInput);
     if (!usernameVisible) {
@@ -297,11 +286,11 @@ test.describe('📝 Signup / Registration Feature Tests', () => {
     const errorVisible = await signupPage.isVisible(signupPage.errorMessage);
     const takenMsg = await signupPage.isVisible(signupPage.usernameTaken);
     console.log(`Error shown: ${errorVisible}, Taken msg: ${takenMsg}`);
-    console.log('✅ Special character username test completed');
+    console.log(' Special character username test completed');
   });
 
   test('TC_SIGNUP_011 - Duplicate email registration should show error', async ({ page }) => {
-    console.log('\n🧪 TC_SIGNUP_011: Testing duplicate email rejection');
+    console.log('\n TC_SIGNUP_011: Testing duplicate email rejection');
 
     const emailVisible = await signupPage.isVisible(signupPage.emailInput);
     if (!emailVisible) {
@@ -309,8 +298,7 @@ test.describe('📝 Signup / Registration Feature Tests', () => {
       return;
     }
 
-    // Use an email that already exists in the system
-    await signupPage.enterEmail('existing@test.com'); // Should already exist
+    await signupPage.enterEmail('existing@test.com'); 
     await signupPage.clickSubmit().catch(() => signupPage.clickNext().catch(() => {}));
     await signupPage.wait(2000);
     await signupPage.screenshot('duplicate-email');
@@ -318,7 +306,7 @@ test.describe('📝 Signup / Registration Feature Tests', () => {
     const errorVisible = await signupPage.isVisible(signupPage.errorMessage);
     const stayedOnPage = page.url().includes('signup') || page.url().includes('register');
     expect(errorVisible || stayedOnPage).toBe(true);
-    console.log('✅ Duplicate email rejection test completed');
+    console.log('Duplicate email rejection test completed');
   });
 
 });
