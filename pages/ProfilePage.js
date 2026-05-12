@@ -1,9 +1,3 @@
-// ============================================================
-// FILE: pages/ProfilePage.js
-// PURPOSE: Page Object for the User Profile screen
-// Covers: view profile, edit profile, settings, followers/following
-// ============================================================
-
 const BasePage = require('./BasePage');
 
 class ProfilePage extends BasePage {
@@ -11,7 +5,7 @@ class ProfilePage extends BasePage {
   constructor(page) {
     super(page);
 
-    // ── Selectors ────────────────────────────────────────────
+    // ── Selectors 
     this.profileTab         = '[href*="profile"], [class*="profile-tab"], button:has-text("Profile"), [aria-label*="profile" i]';
     this.profileName        = '[class*="profile-name"], [class*="username"], h1, h2';
     this.profileBio         = '[class*="bio"], [class*="description"], p[class*="about"]';
@@ -44,17 +38,14 @@ class ProfilePage extends BasePage {
     this.firstPost          = '[class*="posts-grid"] > *:first-child, [class*="post-grid"] > *:first-child';
   }
 
-  // ─────────────────────────────────────────────────────────
   // NAVIGATION
-  // ─────────────────────────────────────────────────────────
 
   /**
    * Navigate to the profile page
-   * @param {string} baseUrl - App base URL
    */
   async openProfilePage(baseUrl) {
     await this.goto(`${baseUrl}/profile`);
-    console.log('👤 Opened Profile page');
+    console.log(' Opened Profile page');
   }
 
   /**
@@ -62,7 +53,7 @@ class ProfilePage extends BasePage {
    */
   async clickProfileTab() {
     await this.click(this.profileTab);
-    console.log('👤 Clicked Profile tab');
+    console.log(' Clicked Profile tab');
     await this.wait(1500);
   }
 
@@ -71,7 +62,7 @@ class ProfilePage extends BasePage {
    */
   async clickEditProfile() {
     await this.click(this.editProfileButton);
-    console.log('✏️  Clicked Edit Profile');
+    console.log('  Clicked Edit Profile');
     await this.wait(1000);
   }
 
@@ -80,7 +71,7 @@ class ProfilePage extends BasePage {
    */
   async clickSettings() {
     await this.click(this.settingsButton);
-    console.log('⚙️  Clicked Settings');
+    console.log('  Clicked Settings');
   }
 
   /**
@@ -88,48 +79,42 @@ class ProfilePage extends BasePage {
    */
   async clickLogout() {
     await this.click(this.logoutButton);
-    console.log('👋 Clicked Logout');
+    console.log(' Clicked Logout');
     await this.wait(2000);
   }
 
-  // ─────────────────────────────────────────────────────────
   // EDIT PROFILE ACTIONS
-  // ─────────────────────────────────────────────────────────
 
   /**
    * Update the display name
-   * @param {string} name - New display name
    */
   async updateName(name) {
     await this.type(this.nameInput, name);
-    console.log(`✏️  Updated name: ${name}`);
+    console.log(`  Updated name: ${name}`);
   }
 
   /**
    * Update the username
-   * @param {string} username - New username
    */
   async updateUsername(username) {
     await this.type(this.usernameInput, username);
-    console.log(`✏️  Updated username: ${username}`);
+    console.log(`  Updated username: ${username}`);
   }
 
   /**
    * Update the bio text
-   * @param {string} bio - New bio text
    */
   async updateBio(bio) {
     await this.type(this.bioInput, bio);
-    console.log(`✏️  Updated bio: ${bio}`);
+    console.log(`  Updated bio: ${bio}`);
   }
 
   /**
    * Update the website URL
-   * @param {string} url - New website URL
    */
   async updateWebsite(url) {
     await this.type(this.websiteInput, url);
-    console.log(`🔗 Updated website: ${url}`);
+    console.log(` Updated website: ${url}`);
   }
 
   /**
@@ -137,7 +122,7 @@ class ProfilePage extends BasePage {
    */
   async clickSave() {
     await this.click(this.saveButton);
-    console.log('💾 Clicked Save');
+    console.log(' Clicked Save');
   }
 
   /**
@@ -145,19 +130,16 @@ class ProfilePage extends BasePage {
    */
   async clickCancel() {
     await this.click(this.cancelButton);
-    console.log('❌ Clicked Cancel');
+    console.log(' Clicked Cancel');
   }
 
-  // ─────────────────────────────────────────────────────────
   // COMBINED FLOWS
-  // ─────────────────────────────────────────────────────────
 
   /**
-   * Complete the edit profile flow with new data
    * @param {object} profileData - Object with profile update fields
    */
   async editProfile(profileData) {
-    console.log('\n✏️  Starting edit profile flow...');
+    console.log('\n  Starting edit profile flow...');
     await this.clickEditProfile();
 
     if (profileData.name) {
@@ -171,19 +153,17 @@ class ProfilePage extends BasePage {
     }
 
     await this.clickSave();
-    console.log('✅ Edit profile form submitted');
+    console.log(' Edit profile form submitted');
   }
 
-  // ─────────────────────────────────────────────────────────
   // DATA GETTERS
-  // ─────────────────────────────────────────────────────────
 
   /**
    * Get the profile name displayed
    */
   async getProfileName() {
     const name = await this.getText(this.profileName).catch(() => '');
-    console.log(`👤 Profile name: ${name}`);
+    console.log(` Profile name: ${name}`);
     return name;
   }
 
@@ -192,7 +172,7 @@ class ProfilePage extends BasePage {
    */
   async getBio() {
     const bio = await this.getText(this.profileBio).catch(() => '');
-    console.log(`📝 Bio: ${bio}`);
+    console.log(` Bio: ${bio}`);
     return bio;
   }
 
@@ -202,7 +182,7 @@ class ProfilePage extends BasePage {
   async getFollowersCount() {
     const text = await this.getText(this.followersCount).catch(() => '0');
     const num = parseInt(text.replace(/\D/g, '')) || 0;
-    console.log(`👥 Followers: ${num}`);
+    console.log(` Followers: ${num}`);
     return num;
   }
 
@@ -212,14 +192,12 @@ class ProfilePage extends BasePage {
   async getFollowingCount() {
     const text = await this.getText(this.followingCount).catch(() => '0');
     const num = parseInt(text.replace(/\D/g, '')) || 0;
-    console.log(`👥 Following: ${num}`);
+    console.log(` Following: ${num}`);
     return num;
   }
-
-  // ─────────────────────────────────────────────────────────
+  
   // ASSERTIONS
-  // ─────────────────────────────────────────────────────────
-
+  
   /**
    * Verify profile page is visible
    */
@@ -230,15 +208,14 @@ class ProfilePage extends BasePage {
     const hasEditBtn = await this.isVisible(this.editProfileButton);
 
     if (!hasAvatar && !hasEditBtn) {
-      console.log('⚠️  Profile page may not be fully loaded - checking URL');
+      console.log(' Profile page may not be fully loaded - checking URL');
       const url = this.getCurrentUrl();
-      console.log(`📍 Current URL: ${url}`);
+      console.log(` Current URL: ${url}`);
     }
-    console.log('✅ Profile page is loaded');
+    console.log(' Profile page is loaded');
   }
 
   /**
-   * Verify profile was updated with new data
    * @param {string} expectedName - Name we expect to see
    */
   async assertProfileUpdated(expectedName) {
@@ -248,8 +225,8 @@ class ProfilePage extends BasePage {
     }
     // Success message should appear
     const successVisible = await this.isVisible(this.successMessage);
-    console.log(successVisible ? '✅ Profile update success message shown' : 'ℹ️  No success toast (might have auto-dismissed)');
-    console.log('✅ Profile update verified');
+    console.log(successVisible ? 'Profile update success message shown' : 'ℹ️  No success toast (might have auto-dismissed)');
+    console.log(' Profile update verified');
   }
 
   /**
@@ -260,9 +237,9 @@ class ProfilePage extends BasePage {
     const bioVisible = await this.isVisible(this.bioInput);
 
     if (!nameVisible && !bioVisible) {
-      throw new Error('❌ Edit profile form fields not found');
+      throw new Error(' Edit profile form fields not found');
     }
-    console.log('✅ Edit profile form is open');
+    console.log(' Edit profile form is open');
   }
 
   /**
@@ -273,9 +250,9 @@ class ProfilePage extends BasePage {
     const url = this.getCurrentUrl();
     const onLoginPage = url.includes('login') || url.includes('signin') || !url.includes('profile');
     if (onLoginPage) {
-      console.log('✅ User is logged out');
+      console.log(' User is logged out');
     } else {
-      throw new Error('❌ User may still be logged in');
+      throw new Error(' User may still be logged in');
     }
   }
 }
