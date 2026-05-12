@@ -1,0 +1,33 @@
+{
+  "name": "begenuin-android-playwright-tests",
+  "version": "1.0.0",
+  "description": "Playwright Automation Framework for Begenuin Android App - Mobile Testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:login": "playwright test tests/login.spec.js",
+    "test:signup": "playwright test tests/signup.spec.js",
+    "test:createPost": "playwright test tests/createPost.spec.js",
+    "test:profile": "playwright test tests/profile.spec.js",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "clean": "rimraf test-results playwright-report screenshots"
+  },
+  "keywords": [
+    "playwright",
+    "automation",
+    "android",
+    "mobile",
+    "testing"
+  ],
+  "author": "QA Automation Engineer",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.44.0",
+    "rimraf": "^5.0.5"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}

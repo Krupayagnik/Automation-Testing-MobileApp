@@ -1,0 +1,29 @@
+# ============================================================
+# FILE: .gitignore
+# PURPOSE: Tell Git which files/folders to NOT upload to GitHub
+# ============================================================
+
+# ── Node.js dependencies (NEVER upload - too large) ──────────
+node_modules/
+
+# ── Playwright output files (generated during test runs) ─────
+playwright-report/
+test-results/
+screenshots/
+
+# ── Environment variables (contains sensitive data!) ─────────
+.env
+
+# ── macOS system files ────────────────────────────────────────
+.DS_Store
+
+# ── Windows system files ──────────────────────────────────────
+Thumbs.db
+desktop.ini
+
+# ── VS Code settings (optional - your preference) ────────────
+# .vscode/
+
+# ── Playwright browser binaries (downloaded separately) ───────
+# These are large and shouldn't be in git
+/ms-playwright/
