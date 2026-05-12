@@ -5,7 +5,7 @@ class LoginPage extends BasePage {
   constructor(page) {
     super(page); // Call parent constructor 
 
-    // ── Locators (selectors for UI elements) 
+    // ── Locators 
     this.phoneInput        = 'input[type="tel"], input[placeholder*="phone" i], input[placeholder*="mobile" i], input[name="phone"]';
     this.emailInput        = 'input[type="email"], input[placeholder*="email" i], input[name="email"]';
     this.passwordInput     = 'input[type="password"], input[placeholder*="password" i]';
@@ -23,9 +23,6 @@ class LoginPage extends BasePage {
 
   // NAVIGATION
  
-  /**
-   * @param {string} baseUrl - The app's base URL
-   */
   async openLoginPage(baseUrl) {
     await this.goto(baseUrl);
     console.log(' Opened app home page');
@@ -59,11 +56,10 @@ class LoginPage extends BasePage {
 
   /**
    * Enter OTP code
-   * @param {string} otp - 6-digit OTP code
    */
   async enterOtp(otp) {
     await this.type(this.otpInput, otp);
-    console.log(`🔢 Entered OTP: ${otp}`);
+    console.log(` Entered OTP: ${otp}`);
   }
 
   /**
@@ -71,7 +67,7 @@ class LoginPage extends BasePage {
    */
   async clickSendOtp() {
     await this.click(this.sendOtpButton);
-    console.log('📨 Clicked Send OTP');
+    console.log(' Clicked Send OTP');
   }
 
   /**
@@ -135,7 +131,7 @@ class LoginPage extends BasePage {
     console.log('Completed Email+Password login flow');
   }
 
-  // ASSERTIONS (verification)
+  // ASSERTIONS (verificatio)
 
   /**
    * Verify that login was successful
@@ -149,7 +145,7 @@ class LoginPage extends BasePage {
     if (isOnLoginPage) {
       const homeVisible = await this.isVisible(this.homeIndicator);
       if (!homeVisible) {
-        throw new Error('❌ Login failed - still on login page or no home indicator found');
+        throw new Error(' Login failed - still on login page or no home indicator found');
       }
     }
     console.log(' Login successful - user is on home/dashboard');
