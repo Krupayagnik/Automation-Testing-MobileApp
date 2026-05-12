@@ -1,4 +1,4 @@
-# 🤖 Begenuin Android App - Playwright Automation Framework
+ # Begenuin Android App - Playwright Automation Framework
 
 ![Playwright](https://img.shields.io/badge/Playwright-1.44.0-green)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES2022-yellow)
@@ -7,9 +7,7 @@
 
 > A professional Playwright automation framework for testing the **Begenuin** Android app's web/PWA version using JavaScript. Built with the Page Object Model (POM) design pattern.
 
----
-
-## 📋 Table of Contents
+# Table of Contents
 
 1. [What This Framework Tests](#what-this-framework-tests)
 2. [Project Structure](#project-structure)
@@ -23,16 +21,15 @@
 10. [Best Practices](#best-practices)
 11. [Troubleshooting](#troubleshooting)
 
----
 
-## 🎯 What This Framework Tests
+# What This Framework Tests
 
 This framework tests the **web/PWA version** of the [Begenuin](https://begenuin.com) Android app using Playwright's Android device simulation (screen size, touch, mobile user-agent).
 
 ### Why Web/PWA instead of native APK?
 > Playwright can test **Android apps that have a web interface or PWA**. For fully native APK testing, tools like Appium + Android emulator are required. This framework uses Playwright's built-in mobile emulation, which perfectly tests the mobile web experience.
 
-**Features Covered:**
+*Features Covered:*
 - ✅ Login (Phone+OTP, Email+Password)
 - ✅ Signup / Registration
 - ✅ Create Post
@@ -42,7 +39,7 @@ This framework tests the **web/PWA version** of the [Begenuin](https://begenuin.
 
 ---
 
-## 📁 Project Structure
+# Project Structure
 
 ```
 begenuin-playwright-framework/
@@ -77,7 +74,7 @@ begenuin-playwright-framework/
 
 ---
 
-## ✅ Prerequisites
+#  Prerequisites
 
 Before you start, make sure these are installed on your computer:
 
@@ -90,13 +87,13 @@ node --version
 # Choose "LTS" version
 ```
 
-### 2. npm (comes with Node.js)
+# 2. npm (comes with Node.js)
 ```bash
 # Check if installed
 npm --version
 ```
 
-### 3. Git
+# 3. Git
 ```bash
 # Check if installed
 git --version
@@ -104,7 +101,7 @@ git --version
 # Download from: https://git-scm.com
 ```
 
-### 4. VS Code (Recommended Editor)
+# 4. VS Code (Recommended Editor)
 Download from: https://code.visualstudio.com
 
 **Recommended VS Code Extensions:**
@@ -113,9 +110,9 @@ Download from: https://code.visualstudio.com
 
 ---
 
-## 🚀 Step-by-Step Setup
+#  Step-by-Step Setup
 
-### Step 1: Create Project Folder
+# Step 1: Create Project Folder
 ```bash
 # Create a new folder for your project
 mkdir begenuin-playwright-framework
@@ -124,15 +121,15 @@ mkdir begenuin-playwright-framework
 cd begenuin-playwright-framework
 ```
 
-### Step 2: Copy All Project Files
+# Step 2: Copy All Project Files
 Copy all the files from this framework into your project folder, maintaining the exact folder structure shown above.
 
-### Step 3: Install Node.js Dependencies
+# Step 3: Install Node.js Dependencies
 ```bash
 # This reads package.json and installs all required packages
 npm install
 ```
-> ⏳ This may take 1-2 minutes. You'll see a `node_modules` folder appear.
+>  This may take 1-2 minutes. You'll see a `node_modules` folder appear.
 
 ### Step 4: Install Playwright Browsers
 ```bash
@@ -142,7 +139,7 @@ npx playwright install
 # If you only want Chromium (faster):
 npx playwright install chromium
 ```
-> ⏳ This downloads ~300MB of browser files. Wait for it to complete.
+>  This downloads ~300MB of browser files. Wait for it to complete.
 
 ### Step 5: Setup Environment Variables
 ```bash
@@ -180,33 +177,17 @@ npx playwright --version
 
 ---
 
-## ▶️ Running Tests
+# Running Tests
 
-### Run ALL tests
+# Run ALL tests
 ```bash
 npm test
 # OR
 npx playwright test
 ```
 
-### Run a specific test file
-```bash
-# Run only login tests
-npm run test:login
-# OR
-npx playwright test tests/login.spec.js
 
-# Run only signup tests
-npm run test:signup
-
-# Run only create post tests
-npm run test:createPost
-
-# Run only profile tests
-npm run test:profile
-```
-
-### Run tests with visible browser (headed mode)
+# Run tests with visible browser (headed mode)
 ```bash
 # See the browser open and tests run live
 npm run test:headed
@@ -214,40 +195,17 @@ npm run test:headed
 npx playwright test --headed
 ```
 
-### Run tests in debug mode (step by step)
+# Run tests in debug mode (step by step)
 ```bash
 npm run test:debug
 # OR
 npx playwright test --debug
 ```
-> 🐛 Debug mode pauses before each action. Press F10 to step through.
+> Debug mode pauses before each action. Press F10 to step through.
 
-### Run a specific test by name
-```bash
-# Run a test whose name contains "valid credentials"
-npx playwright test --grep "valid credentials"
 
-# Run all negative tests
-npx playwright test --grep "TC_LOGIN_00[6-9]"
-```
 
-### Run on specific device only
-```bash
-# Run only on Android mobile (not tablet)
-npx playwright test --project=android-mobile
-
-# Run only on tablet
-npx playwright test --project=android-tablet
-```
-
-### Run with more details in terminal
-```bash
-npx playwright test --reporter=list
-```
-
----
-
-## 📊 Generating Reports
+# Generating Reports
 
 ### Open the HTML Report
 ```bash
@@ -258,7 +216,7 @@ npx playwright show-report
 ```
 > This opens a browser window with full test results, screenshots, and timings.
 
-### Where reports are saved
+# Where reports are saved
 | File/Folder | Contents |
 |---|---|
 | `playwright-report/index.html` | Main HTML report (open in browser) |
@@ -272,7 +230,7 @@ All screenshots are saved in the `screenshots/` folder with timestamps.
 
 ---
 
-## 📂 File Explanations
+# File Explanations
 
 ### `playwright.config.js`
 The main configuration file. Controls:
@@ -290,7 +248,7 @@ The **parent class** for all page objects. Contains common methods:
 - `assertVisible(selector)` - Fails test if not visible
 - `screenshot(name)` - Take a screenshot
 
-### `pages/LoginPage.js`
+# `pages/LoginPage.js`
 Handles all login screen interactions:
 - `openLoginPage(url)` - Navigate to login
 - `enterPhone(phone)` - Type phone number
@@ -298,14 +256,14 @@ Handles all login screen interactions:
 - `enterOtp(otp)` - Type OTP code
 - `loginWithEmailPassword(email, pass)` - Complete email login
 
-### `utils/helpers.js`
+# `utils/helpers.js`
 Standalone reusable functions:
 - `takeScreenshot(page, name)` - Save screenshot to /screenshots
 - `takeFailureScreenshot(page, testName)` - Screenshot on failure
 - `generateUniqueEmail()` - Create unique email for tests
 - `scrollDown(page, pixels)` - Scroll the page
 
-### `utils/testData.js`
+# `utils/testData.js`
 All test data in one file:
 - `APP_URL` - App's base URL
 - `VALID_USER` - Valid login credentials
@@ -316,9 +274,9 @@ All test data in one file:
 
 ---
 
-## 🧪 Test Cases List
+# Test Cases List
 
-### Login Tests (login.spec.js)
+# Login Tests (login.spec.js)
 | Test ID | Test Name | Type |
 |---|---|---|
 | TC_LOGIN_001 | App loads and shows login screen | Positive |
@@ -334,7 +292,7 @@ All test data in one file:
 | TC_LOGIN_011 | SQL injection handled safely | Security |
 | TC_LOGIN_012 | Very long text handled safely | Edge Case |
 
-### Signup Tests (signup.spec.js)
+# Signup Tests (signup.spec.js)
 | Test ID | Test Name | Type |
 |---|---|---|
 | TC_SIGNUP_001 | Signup page loads with form | Positive |
@@ -349,7 +307,7 @@ All test data in one file:
 | TC_SIGNUP_010 | Special chars in username handled | Negative |
 | TC_SIGNUP_011 | Duplicate email shows error | Negative |
 
-### Create Post Tests (createPost.spec.js)
+# Create Post Tests (createPost.spec.js)
 | Test ID | Test Name | Type |
 |---|---|---|
 | TC_POST_001 | Home/feed page loads | Positive |
@@ -364,7 +322,7 @@ All test data in one file:
 | TC_POST_010 | Very long caption handled | Edge Case |
 | TC_POST_011 | Unauthenticated user redirected | Security |
 
-### Profile Tests (profile.spec.js)
+# Profile Tests (profile.spec.js)
 | Test ID | Test Name | Type |
 |---|---|---|
 | TC_PROFILE_001 | Main app screen loads | Positive |
@@ -383,38 +341,17 @@ All test data in one file:
 
 ---
 
-## 🐙 GitHub Setup
 
-### Files to UPLOAD to GitHub ✅
-```
-tests/
-pages/
-utils/
-playwright.config.js
-package.json
-.env.example        ← Template only (NOT the real .env)
-.gitignore
-README.md
-```
 
-### Files to NOT UPLOAD ❌
-```
-node_modules/       ← Too large, reinstalled via npm install
-.env                ← Contains sensitive passwords
-playwright-report/  ← Generated during test runs
-test-results/       ← Generated during test runs
-screenshots/        ← Generated during test runs
-```
-
-### Creating Your GitHub Repository
+# Creating Your GitHub Repository
 
 **Step 1:** Create a new repository at https://github.com/new
 - Repository name: `begenuin-playwright-automation`
 - Description: `Playwright Automation Framework for Begenuin Android App`
 - Visibility: Public (for portfolio) or Private
-- ✅ Add README.md: NO (we already have one)
+-  Add README.md: NO (we already have one)
 
-**Step 2:** Initialize Git in your project folder
+* Step 2: Initialize Git in your project folder
 ```bash
 # Open terminal in your project folder
 git init
@@ -422,77 +359,20 @@ git add .
 git commit -m "Initial commit: Playwright automation framework for Begenuin"
 ```
 
-**Step 3:** Connect and push to GitHub
+* Step 3: Connect and push to GitHub
 ```bash
 git remote add origin https://github.com/YOUR_USERNAME/begenuin-playwright-automation.git
 git branch -M main
 git push -u origin main
 ```
 
-**Step 4:** Verify on GitHub
+* Step 4: Verify on GitHub
 Go to your repo URL and confirm all files uploaded correctly.
 
 ---
 
-## 💡 Best Practices for Fresher QA Engineers
 
-### 1. Always Use Meaningful Test Names
-```javascript
-// ❌ Bad
-test('test1', async ({ page }) => { ... });
-
-// ✅ Good
-test('TC_LOGIN_001 - Valid credentials should login successfully', async ({ page }) => { ... });
-```
-
-### 2. One Test = One Behavior
-Each test should verify only ONE thing. Don't combine multiple scenarios.
-
-### 3. Never Use Fixed Wait (Sleep)
-```javascript
-// ❌ Bad - Always waits 5 seconds even if element loads in 1s
-await page.waitForTimeout(5000);
-
-// ✅ Good - Waits only until element appears (faster & reliable)
-await page.waitForSelector('.home-screen');
-```
-
-### 4. Always Take Screenshots on Failure
-The `afterEach` hook in each spec file automatically takes screenshots when a test fails. **Don't remove this!**
-
-### 5. Keep Selectors in Page Objects
-```javascript
-// ❌ Bad - selector in test file
-await page.click('button[type="submit"]');
-
-// ✅ Good - selector in LoginPage.js, action in test
-await loginPage.clickLogin();
-```
-
-### 6. Use Descriptive Console Logs
-```javascript
-console.log('✅ Login successful');
-console.log('❌ Error appeared as expected');
-console.log(`📍 Current URL: ${url}`);
-```
-
-### 7. Use `test.skip()` for Unavailable Features
-```javascript
-if (!elementVisible) {
-  test.skip(true, 'Feature not available in this version');
-  return;
-}
-```
-
-### 8. Update Selectors When App Changes
-If the app updates its HTML, selectors may break. Use multiple fallback selectors:
-```javascript
-this.loginButton = 'button[type="submit"], button:has-text("Login"), button:has-text("Sign In")';
-```
-
----
-
-## 🔧 Troubleshooting
+# Troubleshooting
 
 ### Problem: `npm install` fails
 ```bash
@@ -533,13 +413,3 @@ npm install dotenv
 
 ---
 
-## 📞 Support
-
-- **Playwright Docs:** https://playwright.dev/docs
-- **Playwright GitHub:** https://github.com/microsoft/playwright
-- **Community Discord:** https://discord.gg/playwright-807756831384403968
-
----
-
-*Framework created for the Begenuin Android App automated testing assignment.*
-*Built with ❤️ by a Junior QA Automation Engineer learning Playwright.*
