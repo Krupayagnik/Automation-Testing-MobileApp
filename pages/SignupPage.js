@@ -1,9 +1,3 @@
-// ============================================================
-// FILE: pages/SignupPage.js
-// PURPOSE: Page Object for the Signup / Registration screen
-// Contains all selectors and actions for new user registration
-// ============================================================
-
 const BasePage = require('./BasePage');
 
 class SignupPage extends BasePage {
@@ -11,7 +5,7 @@ class SignupPage extends BasePage {
   constructor(page) {
     super(page);
 
-    // ── Selectors for Signup screen elements ─────────────────
+    // Selectors for Signup screen elements
     this.signupLink         = 'a:has-text("Sign Up"), a:has-text("Register"), button:has-text("Create Account"), a:has-text("Join")';
     this.firstNameInput     = 'input[placeholder*="first" i], input[name="firstName"], input[name="first_name"]';
     this.lastNameInput      = 'input[placeholder*="last" i], input[name="lastName"], input[name="last_name"]';
@@ -37,17 +31,14 @@ class SignupPage extends BasePage {
     this.usernameTaken      = '[class*="taken"], [class*="error"]:has-text("taken")';
   }
 
-  // ─────────────────────────────────────────────────────────
   // NAVIGATION
-  // ─────────────────────────────────────────────────────────
 
   /**
    * Open the signup page directly or navigate to it
-   * @param {string} baseUrl - Base URL of the app
    */
   async openSignupPage(baseUrl) {
     await this.goto(`${baseUrl}/signup`);
-    console.log('📱 Opened Signup page');
+    console.log(' Opened Signup page');
   }
 
   /**
@@ -57,10 +48,7 @@ class SignupPage extends BasePage {
     await this.click(this.signupLink);
     console.log('➡️  Navigated from Login to Signup');
   }
-
-  // ─────────────────────────────────────────────────────────
   // FORM INPUT ACTIONS
-  // ─────────────────────────────────────────────────────────
 
   async enterFirstName(name) {
     await this.type(this.firstNameInput, name);
@@ -76,7 +64,7 @@ class SignupPage extends BasePage {
 
   async enterUsername(username) {
     await this.type(this.usernameInput, username);
-    console.log(`👤 Entered username: ${username}`);
+    console.log(` Entered username: ${username}`);
     await this.wait(1000); // Wait for availability check
   }
 
@@ -104,13 +92,11 @@ class SignupPage extends BasePage {
     await this.type(this.otpInput, otp);
   }
 
-  // ─────────────────────────────────────────────────────────
   // BUTTON ACTIONS
-  // ─────────────────────────────────────────────────────────
 
   async clickSendOtp() {
     await this.click(this.sendOtpButton);
-    console.log('📨 Requested OTP');
+    console.log('Requested OTP');
   }
 
   async clickVerifyOtp() {
@@ -123,7 +109,7 @@ class SignupPage extends BasePage {
 
   async clickSubmit() {
     await this.click(this.submitButton);
-    console.log('🚀 Submitted signup form');
+    console.log(' Submitted signup form');
   }
 
   async clickTermsCheckbox() {
@@ -131,7 +117,7 @@ class SignupPage extends BasePage {
     const isChecked = await checkbox.isChecked().catch(() => false);
     if (!isChecked) {
       await checkbox.click();
-      console.log('☑️  Accepted Terms & Conditions');
+      console.log('Accepted Terms & Conditions');
     }
   }
 
@@ -139,16 +125,13 @@ class SignupPage extends BasePage {
     await this.click(this.loginLink);
   }
 
-  // ─────────────────────────────────────────────────────────
   // COMBINED REGISTRATION FLOWS
-  // ─────────────────────────────────────────────────────────
 
   /**
    * Fill and submit a complete registration form
-   * @param {object} userData - Object with user registration data
    */
   async completeRegistration(userData) {
-    console.log('\n📝 Starting registration flow...');
+    console.log('\n Starting registration flow...');
 
     // Try to enter first/last name OR full name
     try {
@@ -161,11 +144,10 @@ class SignupPage extends BasePage {
     await this.enterUsername(userData.username);
     await this.enterEmail(userData.email);
 
-    // Phone is sometimes optional
     try {
       await this.enterPhone(userData.phone);
     } catch {
-      console.log('ℹ️  Phone field not found (optional)');
+      console.log('Phone field not found (optional)');
     }
 
     await this.enterPassword(userData.password);
@@ -174,7 +156,7 @@ class SignupPage extends BasePage {
     try {
       await this.enterConfirmPassword(userData.confirmPassword);
     } catch {
-      console.log('ℹ️  Confirm password field not found');
+      console.log('Confirm password field not found');
     }
 
     // Bio is optional
@@ -183,23 +165,21 @@ class SignupPage extends BasePage {
         await this.enterBio(userData.bio);
       }
     } catch {
-      console.log('ℹ️  Bio field not found (optional)');
+      console.log('  Bio field not found (optional)');
     }
 
     // Accept terms if checkbox exists
     try {
       await this.clickTermsCheckbox();
     } catch {
-      console.log('ℹ️  Terms checkbox not found');
+      console.log('Terms checkbox not found');
     }
 
     await this.clickSubmit();
-    console.log('✅ Registration form submitted');
+    console.log('Registration form submitted');
   }
 
-  // ─────────────────────────────────────────────────────────
   // ASSERTIONS
-  // ─────────────────────────────────────────────────────────
 
   /**
    * Verify signup was successful
@@ -214,10 +194,10 @@ class SignupPage extends BasePage {
       // Check for success message on same page
       const successVisible = await this.isVisible(this.successMessage);
       if (!successVisible) {
-        throw new Error('❌ Signup may have failed - still on signup page');
+        throw new Error(' Signup may have failed - still on signup page');
       }
     }
-    console.log('✅ Signup completed successfully');
+    console.log(' Signup completed successfully');
   }
 
   /**
@@ -230,9 +210,9 @@ class SignupPage extends BasePage {
       await this.assertPageContainsText(expectedText);
     } else {
       const text = await this.getText(this.errorMessage).catch(() => '');
-      console.log(`⚠️  Error shown: "${text}"`);
+      console.log(`Error shown: "${text}"`);
     }
-    console.log('✅ Error is displayed as expected');
+    console.log(' Error is displayed as expected');
   }
 
   /**
