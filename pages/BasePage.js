@@ -1,5 +1,3 @@
-
-
 const { expect } = require('@playwright/test');
 const { takeScreenshot, waitFor, isElementVisible } = require('../utils/helpers');
 
