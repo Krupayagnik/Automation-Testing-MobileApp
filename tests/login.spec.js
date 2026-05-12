@@ -1,18 +1,12 @@
-// ============================================================
-// FILE: tests/login.spec.js
-// PURPOSE: All test cases for Login functionality
-// Covers: valid login, invalid login, OTP flow, edge cases
-// ============================================================
-
-// ── Imports ─────────────────────────────────────────────────
+//  Imports 
 const { test, expect } = require('@playwright/test');
 const LoginPage        = require('../pages/LoginPage');
 const { APP_URL, VALID_USER, INVALID_DATA, TIMEOUTS } = require('../utils/testData');
 const { takeFailureScreenshot } = require('../utils/helpers');
 
-// ── Test Suite Setup ─────────────────────────────────────────
+//  Test Suite Setup
 // "describe" groups related tests together
-test.describe('🔐 Login Feature Tests', () => {
+test.describe(' Login Feature Tests', () => {
 
   // Variables to hold page objects (created fresh for each test)
   let loginPage;
@@ -34,18 +28,16 @@ test.describe('🔐 Login Feature Tests', () => {
     // If the test FAILED, take a screenshot for debugging
     if (testInfo.status !== testInfo.expectedStatus) {
       await takeFailureScreenshot(page, testInfo.title);
-      console.log(`❌ TEST FAILED: ${testInfo.title}`);
+      console.log(` TEST FAILED: ${testInfo.title}`);
     }
   });
 
 
-  // ════════════════════════════════════════════════════════════
-  // ✅ POSITIVE TEST CASES (valid inputs, expect success)
-  // ════════════════════════════════════════════════════════════
+  //  POSITIVE TEST CASES (valid inputs, expect success)
 
   test('TC_LOGIN_001 - App should load and show login screen', async ({ page }) => {
     // WHAT THIS TESTS: That the app actually opens correctly
-    console.log('\n🧪 TC_LOGIN_001: Verifying app loads with login screen');
+    console.log('\n TC_LOGIN_001: Verifying app loads with login screen');
 
     // The page should have loaded (URL should not be blank)
     expect(page.url()).toContain('begenuin');
@@ -53,36 +45,30 @@ test.describe('🔐 Login Feature Tests', () => {
     // Page title should exist
     const title = await page.title();
     expect(title).toBeTruthy();
-    console.log(`📄 Page title: "${title}"`);
+    console.log(` Page title: "${title}"`);
 
     // Take a screenshot
     await loginPage.screenshot('app-loaded');
-    console.log('✅ App loaded successfully');
+    console.log('App loaded successfully');
   });
 
   test('TC_LOGIN_002 - Login page should display required UI elements', async ({ page }) => {
-    // WHAT THIS TESTS: That login form has all necessary elements
-    console.log('\n🧪 TC_LOGIN_002: Checking login page UI elements');
-
-    // At least one input should be visible (phone OR email)
+    console.log('\n TC_LOGIN_002: Checking login page UI elements');
     const hasPhoneInput = await loginPage.isVisible(loginPage.phoneInput);
     const hasEmailInput = await loginPage.isVisible(loginPage.emailInput);
-
-    // One of these must be true
     expect(hasPhoneInput || hasEmailInput).toBe(true);
-    console.log(`📱 Phone input visible: ${hasPhoneInput}`);
-    console.log(`📧 Email input visible: ${hasEmailInput}`);
+    console.log(` Phone input visible: ${hasPhoneInput}`);
+    console.log(` Email input visible: ${hasEmailInput}`);
 
     // Login button should exist
     const hasLoginBtn = await loginPage.isVisible(loginPage.loginButton);
     const hasSendOtpBtn = await loginPage.isVisible(loginPage.sendOtpButton);
     expect(hasLoginBtn || hasSendOtpBtn).toBe(true);
-    console.log('✅ Login page has required UI elements');
+    console.log(' Login page has required UI elements');
   });
 
   test('TC_LOGIN_003 - Valid phone number should trigger OTP send', async ({ page }) => {
-    // WHAT THIS TESTS: Entering valid phone and requesting OTP
-    console.log('\n🧪 TC_LOGIN_003: Testing OTP send with valid phone');
+    console.log('\n TC_LOGIN_003: Testing OTP send with valid phone');
 
     const hasPhoneInput = await loginPage.isVisible(loginPage.phoneInput);
 
@@ -108,12 +94,12 @@ test.describe('🔐 Login Feature Tests', () => {
     const successMsg = await loginPage.isVisible(loginPage.successMessage);
 
     expect(otpVisible || successMsg).toBe(true);
-    console.log('✅ OTP was sent successfully');
+    console.log(' OTP was sent successfully');
   });
 
   test('TC_LOGIN_004 - Valid credentials login should succeed', async ({ page }) => {
     // WHAT THIS TESTS: Complete login with valid credentials
-    console.log('\n🧪 TC_LOGIN_004: Testing full login flow with valid credentials');
+    console.log('\n TC_LOGIN_004: Testing full login flow with valid credentials');
 
     // Check which login method is available
     const hasEmailInput = await loginPage.isVisible(loginPage.emailInput);
@@ -123,7 +109,6 @@ test.describe('🔐 Login Feature Tests', () => {
       // Email + Password login
       await loginPage.loginWithEmailPassword(VALID_USER.email, VALID_USER.password);
     } else if (hasPhoneInput) {
-      // Phone + OTP login (NOTE: OTP needs to be a real/static test OTP)
       await loginPage.enterPhone(VALID_USER.phone);
       await loginPage.clickSendOtp();
       await loginPage.wait(2000);
@@ -140,12 +125,12 @@ test.describe('🔐 Login Feature Tests', () => {
 
     // Verify login succeeded (URL changed OR home indicator visible)
     await loginPage.assertLoginSuccess();
-    console.log('✅ Login with valid credentials PASSED');
+    console.log(' Login with valid credentials PASSED');
   });
 
   test('TC_LOGIN_005 - Signup link should navigate to registration page', async ({ page }) => {
     // WHAT THIS TESTS: Navigation from Login to Signup
-    console.log('\n🧪 TC_LOGIN_005: Testing Sign Up link navigation');
+    console.log('\n TC_LOGIN_005: Testing Sign Up link navigation');
 
     const hasSignupLink = await loginPage.isVisible(loginPage.signupLink);
 
@@ -161,18 +146,16 @@ test.describe('🔐 Login Feature Tests', () => {
 
     // URL should change
     expect(urlAfter).not.toBe(urlBefore);
-    console.log(`📍 Navigated from ${urlBefore} → ${urlAfter}`);
-    console.log('✅ Sign Up link navigation works');
+    console.log(` Navigated from ${urlBefore} → ${urlAfter}`);
+    console.log(' Sign Up link navigation works');
   });
 
 
-  // ════════════════════════════════════════════════════════════
-  // ❌ NEGATIVE TEST CASES (invalid inputs, expect errors)
-  // ════════════════════════════════════════════════════════════
+  //  NEGATIVE TEST CASES (invalid inputs, expect errors)
 
   test('TC_LOGIN_006 - Login with empty phone/email should show error', async ({ page }) => {
     // WHAT THIS TESTS: Form validation - empty fields should not submit
-    console.log('\n🧪 TC_LOGIN_006: Testing empty field validation');
+    console.log('\n TC_LOGIN_006: Testing empty field validation');
 
     // Click login without entering anything
     const loginBtnVisible = await loginPage.isVisible(loginPage.loginButton);
@@ -197,12 +180,11 @@ test.describe('🔐 Login Feature Tests', () => {
     const errorShown = await loginPage.isVisible(loginPage.errorMessage);
 
     expect(staysOnLogin || errorShown).toBe(true);
-    console.log('✅ Empty field validation works correctly');
+    console.log(' Empty field validation works correctly');
   });
 
   test('TC_LOGIN_007 - Login with invalid phone number should show error', async ({ page }) => {
-    // WHAT THIS TESTS: That invalid phone number is rejected
-    console.log('\n🧪 TC_LOGIN_007: Testing invalid phone number');
+    console.log('\n TC_LOGIN_007: Testing invalid phone number');
 
     const hasPhoneInput = await loginPage.isVisible(loginPage.phoneInput);
     if (!hasPhoneInput) {
@@ -222,12 +204,12 @@ test.describe('🔐 Login Feature Tests', () => {
                         loginPage.getCurrentUrl() === APP_URL ||
                         loginPage.getCurrentUrl() === APP_URL + '/';
     expect(errorShown || staysOnPage).toBe(true);
-    console.log('✅ Invalid phone number correctly rejected');
+    console.log(' Invalid phone number correctly rejected');
   });
 
   test('TC_LOGIN_008 - Login with wrong OTP should show error', async ({ page }) => {
     // WHAT THIS TESTS: Invalid OTP is rejected
-    console.log('\n🧪 TC_LOGIN_008: Testing wrong OTP rejection');
+    console.log('\n TC_LOGIN_008: Testing wrong OTP rejection');
 
     const hasPhoneInput = await loginPage.isVisible(loginPage.phoneInput);
     if (!hasPhoneInput) {
@@ -241,7 +223,7 @@ test.describe('🔐 Login Feature Tests', () => {
 
     const otpVisible = await loginPage.isVisible(loginPage.otpInput);
     if (!otpVisible) {
-      console.log('ℹ️  OTP field not shown - skipping');
+      console.log('  OTP field not shown - skipping');
       return;
     }
 
@@ -254,12 +236,11 @@ test.describe('🔐 Login Feature Tests', () => {
     // Error should appear
     const errorShown = await loginPage.isVisible(loginPage.errorMessage);
     expect(errorShown).toBe(true);
-    console.log('✅ Wrong OTP correctly rejected');
+    console.log(' Wrong OTP correctly rejected');
   });
 
   test('TC_LOGIN_009 - Login with invalid email format should show error', async ({ page }) => {
-    // WHAT THIS TESTS: Email format validation
-    console.log('\n🧪 TC_LOGIN_009: Testing invalid email format');
+    console.log('\n TC_LOGIN_009: Testing invalid email format');
 
     const hasEmailInput = await loginPage.isVisible(loginPage.emailInput);
     if (!hasEmailInput) {
@@ -267,7 +248,7 @@ test.describe('🔐 Login Feature Tests', () => {
       return;
     }
 
-    // Enter invalid email (missing @ symbol)
+    // Enter invalid email 
     await loginPage.enterEmail(INVALID_DATA.invalidEmail);
     await loginPage.clickLogin().catch(() => {}); // Ignore if button doesn't exist yet
     await loginPage.wait(1500);
@@ -279,12 +260,12 @@ test.describe('🔐 Login Feature Tests', () => {
                       loginPage.getCurrentUrl() === APP_URL + '/';
 
     expect(errorShown || pageStays).toBe(true);
-    console.log('✅ Invalid email format correctly handled');
+    console.log(' Invalid email format correctly handled');
   });
 
   test('TC_LOGIN_010 - Login with short/invalid password should show error', async ({ page }) => {
     // WHAT THIS TESTS: Password validation
-    console.log('\n🧪 TC_LOGIN_010: Testing short password validation');
+    console.log('\n TC_LOGIN_010: Testing short password validation');
 
     const hasEmailInput = await loginPage.isVisible(loginPage.emailInput);
     const hasPassInput = await loginPage.isVisible(loginPage.passwordInput);
@@ -305,17 +286,15 @@ test.describe('🔐 Login Feature Tests', () => {
                         loginPage.getCurrentUrl() === APP_URL ||
                         loginPage.getCurrentUrl() === APP_URL + '/';
     expect(errorShown || staysOnPage).toBe(true);
-    console.log('✅ Short password correctly rejected');
+    console.log(' Short password correctly rejected');
   });
 
 
-  // ════════════════════════════════════════════════════════════
-  // 🛡️ SECURITY / EDGE CASE TESTS
-  // ════════════════════════════════════════════════════════════
+  //  SECURITY / EDGE CASE TESTS
 
   test('TC_LOGIN_011 - SQL injection in phone field should not crash app', async ({ page }) => {
     // WHAT THIS TESTS: App handles malicious input safely
-    console.log('\n🧪 TC_LOGIN_011: Testing SQL injection handling');
+    console.log('\n TC_LOGIN_011: Testing SQL injection handling');
 
     const hasPhoneInput = await loginPage.isVisible(loginPage.phoneInput);
     if (!hasPhoneInput) {
@@ -323,7 +302,6 @@ test.describe('🔐 Login Feature Tests', () => {
       return;
     }
 
-    // Try SQL injection - app should handle gracefully (not crash)
     await loginPage.enterPhone(INVALID_DATA.sqlInjection);
     await loginPage.clickSendOtp().catch(() => {});
     await loginPage.wait(2000);
@@ -333,12 +311,11 @@ test.describe('🔐 Login Feature Tests', () => {
     expect(page.url()).toBeTruthy();
     const hasTitle = await page.title();
     expect(hasTitle).toBeTruthy();
-    console.log('✅ App handled SQL injection safely - no crash');
+    console.log(' App handled SQL injection safely - no crash');
   });
 
   test('TC_LOGIN_012 - Very long text in phone field should be handled', async ({ page }) => {
-    // WHAT THIS TESTS: App handles extremely long input
-    console.log('\n🧪 TC_LOGIN_012: Testing long text input handling');
+    console.log('\n TC_LOGIN_012: Testing long text input handling');
 
     const hasPhoneInput = await loginPage.isVisible(loginPage.phoneInput);
     if (!hasPhoneInput) {
@@ -352,7 +329,7 @@ test.describe('🔐 Login Feature Tests', () => {
 
     // App should not crash
     expect(page.url()).toBeTruthy();
-    console.log('✅ Long text handled without app crash');
+    console.log(' Long text handled without app crash');
   });
 
 });
