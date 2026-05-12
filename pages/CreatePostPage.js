@@ -1,7 +1,3 @@
-// ============================================================
-// FILE: pages/CreatePostPage.js
-// PURPOSE: Page Object for the Create Post / Upload Content screen
-// ============================================================
 
 const BasePage = require('./BasePage');
 
@@ -10,7 +6,7 @@ class CreatePostPage extends BasePage {
   constructor(page) {
     super(page);
 
-    // ── Selectors ────────────────────────────────────────────
+    // Selectors 
     this.createPostButton   = 'button:has-text("Create"), button:has-text("Post"), [class*="create"], [class*="add-post"], a[href*="create"], [aria-label*="create" i]';
     this.captionInput       = 'textarea[placeholder*="caption" i], textarea[placeholder*="write" i], textarea[placeholder*="whats" i], textarea[name="caption"]';
     this.mediaUploadButton  = 'input[type="file"], button:has-text("Add Photo"), button:has-text("Upload"), [class*="upload"]';
@@ -20,7 +16,7 @@ class CreatePostPage extends BasePage {
     this.tagPeopleButton    = 'button:has-text("Tag"), [class*="tag-people"]';
     this.locationButton     = 'button:has-text("Location"), button:has-text("Add Location"), [class*="location"]';
     this.hashtagInput       = 'input[placeholder*="hashtag" i], input[placeholder*="#" i]';
-    this.emojiButton        = '[class*="emoji"], button:has-text("😊")';
+    this.emojiButton        = '[class*="emoji"], button:has-text("")';
     this.characterCount     = '[class*="count"], [class*="limit"]';
     this.errorMessage       = '[class*="error"], [role="alert"]';
     this.successMessage     = '[class*="success"], [class*="toast"]';
@@ -29,17 +25,14 @@ class CreatePostPage extends BasePage {
     this.feedFirstPost      = '[class*="feed"] [class*="post"]:first-child, [class*="home"] [class*="card"]:first-child';
   }
 
-  // ─────────────────────────────────────────────────────────
   // NAVIGATION
-  // ─────────────────────────────────────────────────────────
-
+  
   /**
    * Open the create post page/modal
-   * @param {string} baseUrl - App base URL
    */
   async openCreatePost(baseUrl) {
     await this.goto(`${baseUrl}/create`);
-    console.log('📝 Opened Create Post page');
+    console.log(' Opened Create Post page');
   }
 
   /**
@@ -47,33 +40,28 @@ class CreatePostPage extends BasePage {
    */
   async clickCreatePostButton() {
     await this.click(this.createPostButton);
-    console.log('➕ Clicked Create Post button');
+    console.log(' Clicked Create Post button');
     await this.wait(1000);
   }
 
-  // ─────────────────────────────────────────────────────────
   // FORM ACTIONS
-  // ─────────────────────────────────────────────────────────
 
   /**
    * Type a caption for the post
-   * @param {string} caption - Caption text
    */
   async enterCaption(caption) {
     await this.type(this.captionInput, caption);
-    console.log(`📝 Entered caption: "${caption.substring(0, 30)}..."`);
+    console.log(` Entered caption: "${caption.substring(0, 30)}..."`);
   }
 
   /**
    * Add a hashtag to the post
-   * @param {string} hashtag - Hashtag without the # symbol
    */
   async addHashtag(hashtag) {
     const captionField = this.page.locator(this.captionInput);
     await captionField.click();
-    // Type hashtag at the end of caption
     await captionField.type(` #${hashtag}`);
-    console.log(`#️⃣  Added hashtag: #${hashtag}`);
+    console.log(` Added hashtag: #${hashtag}`);
   }
 
   /**
@@ -81,7 +69,7 @@ class CreatePostPage extends BasePage {
    */
   async clickAddLocation() {
     await this.click(this.locationButton);
-    console.log('📍 Clicked Add Location');
+    console.log(' Clicked Add Location');
   }
 
   /**
@@ -97,7 +85,7 @@ class CreatePostPage extends BasePage {
    */
   async clickSubmitPost() {
     await this.click(this.postSubmitButton);
-    console.log('📤 Submitted post');
+    console.log(' Submitted post');
   }
 
   /**
@@ -105,7 +93,7 @@ class CreatePostPage extends BasePage {
    */
   async clickDiscard() {
     await this.click(this.discardButton);
-    console.log('🗑️  Discarded post');
+    console.log('  Discarded post');
   }
 
   /**
@@ -113,29 +101,24 @@ class CreatePostPage extends BasePage {
    */
   async clickSaveAsDraft() {
     await this.click(this.saveAsDraftButton);
-    console.log('💾 Saved as draft');
+    console.log(' Saved as draft');
   }
 
-  // ─────────────────────────────────────────────────────────
   // COMBINED FLOWS
-  // ─────────────────────────────────────────────────────────
 
   /**
    * Create a simple text-only post
-   * @param {string} caption - Post caption text
    */
   async createTextPost(caption) {
-    console.log('\n🆕 Creating a new text post...');
+    console.log('\n Creating a new text post...');
     await this.clickCreatePostButton();
     await this.enterCaption(caption);
     await this.clickSubmitPost();
-    console.log('✅ Text post creation flow completed');
+    console.log(' Text post creation flow completed');
   }
 
   /**
    * Create post with caption and hashtags
-   * @param {string} caption  - Post caption
-   * @param {string[]} tags   - Array of hashtags (without #)
    */
   async createPostWithHashtags(caption, tags = []) {
     await this.clickCreatePostButton();
@@ -146,9 +129,7 @@ class CreatePostPage extends BasePage {
     await this.clickSubmitPost();
   }
 
-  // ─────────────────────────────────────────────────────────
   // ASSERTIONS
-  // ─────────────────────────────────────────────────────────
 
   /**
    * Verify post was created successfully
@@ -157,54 +138,45 @@ class CreatePostPage extends BasePage {
     await this.wait(3000);
     // After posting, user is usually redirected to feed/profile
     const url = this.getCurrentUrl();
-    console.log(`📍 URL after posting: ${url}`);
+    console.log(` URL after posting: ${url}`);
 
     // Check for success toast
     const successVisible = await this.isVisible(this.successMessage);
     if (successVisible) {
       const msg = await this.getText(this.successMessage).catch(() => '');
-      console.log(`✅ Success message: "${msg}"`);
+      console.log(` Success message: "${msg}"`);
     } else {
-      // Verify we left the create page (redirected to feed)
       const stillOnCreate = url.includes('create') || url.includes('new-post');
       if (!stillOnCreate) {
-        console.log('✅ Post created - redirected to feed/home');
+        console.log(' Post created - redirected to feed/home');
       } else {
-        console.log('⚠️  Still on create page - checking for other success indicators');
+        console.log('  Still on create page - checking for other success indicators');
       }
     }
-    console.log('✅ Post creation confirmed');
+    console.log('Post creation confirmed');
   }
 
-  /**
-   * Verify create post button is visible (means user is logged in)
-   */
+  
   async assertCreateButtonVisible() {
     await this.assertVisible(this.createPostButton, 'Create post button should be visible');
   }
 
-  /**
-   * Verify an error is shown (e.g., empty caption error)
-   */
   async assertErrorShown(expectedText) {
     const errorVisible = await this.isVisible(this.errorMessage);
     if (!errorVisible && expectedText) {
       await this.assertPageContainsText(expectedText);
     } else {
       const text = await this.getText(this.errorMessage).catch(() => 'error shown');
-      console.log(`⚠️  Error: "${text}"`);
+      console.log(` Error: "${text}"`);
     }
-    console.log('✅ Error correctly shown');
+    console.log(' Error correctly shown');
   }
 
-  /**
-   * Verify character count is visible in caption field
-   */
   async assertCharacterCountVisible() {
     const countVisible = await this.isVisible(this.characterCount);
     if (countVisible) {
       const count = await this.getText(this.characterCount).catch(() => '');
-      console.log(`🔢 Character count: ${count}`);
+      console.log(`Character count: ${count}`);
     }
     return countVisible;
   }
